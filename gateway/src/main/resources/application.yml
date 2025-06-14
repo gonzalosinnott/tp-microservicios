@@ -1,0 +1,67 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      discovery:
+        locator:
+          enabled: false
+          lower-case-service-id: true
+      routes:
+        - id: employees
+          uri: lb://employees
+          predicates:
+            - Path=/employees,/employees/**,/v3/api-docs/employees
+          filters:
+            - RewritePath=/v3/api-docs/employees, /v3/api-docs
+        - id: clients
+          uri: lb://clients
+          predicates:
+            - Path=/clients,/clients/**,/v3/api-docs/clients
+          filters:
+            - RewritePath=/v3/api-docs/clients, /v3/api-docs
+        - id: branchs
+          uri: lb://branchs
+          predicates:
+            - Path=/branchs,/branchs/**,/v3/api-docs/branchs
+          filters:
+            - RewritePath=/v3/api-docs/branchs, /v3/api-docs
+        - id: stock
+          uri: lb://stock
+          predicates:
+            - Path=/stock,/stock/**,/v3/api-docs/stock
+          filters:
+            - RewritePath=/v3/api-docs/stock, /v3/api-docs
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - url: /v3/api-docs/employees
+        name: Employees API
+      - url: /v3/api-docs/clients
+        name: Clients API
+      - url: /v3/api-docs/branchs
+        name: Branches API
+      - url: /v3/api-docs/stock
+        name: Stock API
+    urls-primary-name: Employees API
