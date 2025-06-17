@@ -42,17 +42,65 @@ graph TD
 
 ---
 ## 2 · API pública por servicio
-Cada servicio implementa CRUD, búsqueda dinámica (`/search`) y verificación de existencia (`/exists/{id}`).
 
-| Servicio | Base-path | Endpoints clave |
-|----------|-----------|-----------------|
-| Branchs | `/branchs` | `/`, `/{id}`, `/search`, `/exists/{id}` |
-| Clients | `/clients` | `/`, `/{id}`, `/search`, `/exists/{id}` |
-| Employees | `/employees` | `/`, `/{id}`, `/search`, `/exists/{id}` |
-| Stock – Cars | `/stock/catalog/cars` | `/`, `/{id}`, `/search` |
-| Stock – Inventory | `/stock/inventory` | `/`, `/{id}`, `/search` |
-| Sales – Billing | `/sales/billing` | `/`, `/{id}`, `/search` |
-| Sales – Repairs | `/sales/repairs` | `/`, `/{id}`, `/search` |
+A continuación se detallan los endpoints disponibles para cada micro-servicio. Todos son accesibles a través del API Gateway (`http://localhost:8080`).
+
+### Branchs Service (`/branchs`)
+- **`GET /`**: Obtener todas las sucursales.
+- **`GET /{id}`**: Obtener una sucursal por su ID.
+- **`POST /`**: Crear una nueva sucursal.
+- **`PUT /{id}`**: Actualizar una sucursal existente.
+- **`DELETE /{id}`**: Eliminar una sucursal.
+- **`GET /search`**: Buscar sucursales por nombre, país, provincia, ciudad o dirección.
+- **`GET /exists/{id}`**: Verificar si una sucursal existe.
+
+### Clients Service (`/clients`)
+- **`GET /`**: Obtener todos los clientes.
+- **`GET /{id}`**: Obtener un cliente por su ID.
+- **`POST /`**: Crear un nuevo cliente.
+- **`PUT /{id}`**: Actualizar un cliente existente.
+- **`DELETE /{id}`**: Eliminar un cliente.
+- **`GET /search`**: Buscar clientes por nombre, apellido, DNI, email, teléfono o dirección.
+- **`GET /exists/{id}`**: Verificar si un cliente existe.
+
+### Employees Service (`/employees`)
+- **`GET /`**: Obtener todos los empleados.
+- **`GET /{id}`**: Obtener un empleado por su ID.
+- **`POST /`**: Crear un nuevo empleado.
+- **`PUT /{id}`**: Actualizar un empleado existente.
+- **`DELETE /{id}`**: Eliminar un empleado.
+- **`GET /search`**: Buscar empleados por nombre, apellido, DNI, rol o ID de sucursal.
+- **`GET /exists/{id}`**: Verificar si un empleado existe.
+
+### Stock Service (`/stock`)
+#### Catálogo de Autos (`/catalog/cars`)
+- **`GET /`**: Obtener todos los autos del catálogo.
+- **`GET /{id}`**: Obtener un auto por su ID.
+- **`POST /`**: Añadir un nuevo auto al catálogo.
+- **`PUT /{id}`**: Actualizar un auto del catálogo.
+- **`DELETE /{id}`**: Eliminar un auto del catálogo.
+- **`GET /search`**: Buscar autos por marca, modelo, año o tipo.
+#### Inventario (`/inventory`)
+- **`GET /`**: Obtener todo el inventario de todas las sucursales.
+- **`GET /{id}`**: Obtener un registro de inventario por su ID.
+- **`POST /`**: Crear un registro de inventario.
+- **`PUT /{id}`**: Actualizar un registro de inventario.
+- **`DELETE /{id}`**: Eliminar un registro de inventario.
+- **`GET /search`**: Buscar en el inventario por ID de auto, ID de sucursal o stock disponible.
+
+### Sales Service (`/sales`)
+#### Ventas (`/billing`)
+- **`GET /`**: Obtener un resumen de todas las ventas.
+- **`GET /{id}`**: Obtener el detalle de una venta por su ID.
+- **`POST /`**: Registrar una nueva venta.
+- **`DELETE /{id}`**: Eliminar una venta.
+- **`GET /search`**: Buscar ventas por ID de empleado, ID de auto, ID de cliente o fecha.
+#### Reparaciones (`/repairs`)
+- **`GET /`**: Obtener un resumen de todas las reparaciones.
+- **`GET /{id}`**: Obtener el detalle de una reparación por su ID.
+- **`POST /`**: Registrar un nuevo servicio de reparación.
+- **`DELETE /{id}`**: Eliminar un servicio de reparación.
+- **`GET /search`**: Buscar reparaciones por ID de empleado, ID de auto o fecha.
 
 > Para probarlos rápidamente, importa la colección Postman mencionada en la sección 4.
 
@@ -137,4 +185,3 @@ Se añadió en la raíz del repo el archivo `tp-microservicios.postman_collectio
 3. Navegar por las carpetas de cada micro-servicio y ejecutar las peticiones.
 
 ---
-¡Listo! Con esto tienes una visión completa de la solución y cómo probarla rápidamente. 🚀
