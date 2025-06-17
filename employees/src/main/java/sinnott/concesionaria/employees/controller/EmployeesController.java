@@ -2,7 +2,6 @@ package sinnott.concesionaria.employees.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import sinnott.concesionaria.employees.entitites.EmployeeDTO;
-import sinnott.concesionaria.employees.models.enums.EmployeeRole;
+import sinnott.concesionaria.employees.entitites.enums.EmployeeRole;
 import sinnott.concesionaria.employees.service.EmployeeService;
 
 @RestController
@@ -47,7 +46,7 @@ public class EmployeesController {
     @PostMapping
     @Operation(summary = "Crear un empleado")
     public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.saveEmployee(employeeDTO));
+        return ResponseEntity.ok(employeeService.saveEmployee(employeeDTO));
     }
 
     @PutMapping("/{id}")
@@ -65,12 +64,17 @@ public class EmployeesController {
 
     @GetMapping("/search")
     @Operation(summary = "Buscar empleados por cualquier combinación de atributos")
-    public ResponseEntity<List<EmployeeDTO>> searchByParams(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String surname,
-            @RequestParam(required = false) EmployeeRole role,
-            @RequestParam(required = false) Long branchId
-    ) {
-        return ResponseEntity.ok(employeeService.search(name, surname, role, branchId));
+    public ResponseEntity<List<EmployeeDTO>> searchByParams(@RequestParam(required = false) String name,
+                                                            @RequestParam(required = false) String lastName,
+                                                            @RequestParam(required = false) Integer identityId,
+                                                            @RequestParam(required = false) EmployeeRole role,
+                                                            @RequestParam(required = false) Integer branchId) {
+        return ResponseEntity.ok(employeeService.search(name, lastName, identityId, role, branchId));
+    }
+
+    @GetMapping("/exists/{id}")
+    @Operation(summary = "Verificar si un empleado existe")
+    public ResponseEntity<Boolean> existsEmployee(@PathVariable Integer id) {
+        return ResponseEntity.ok(employeeService.existsEmployee(id));
     }
 }

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sinnott.concesionaria.employees.models.enums.EmployeeRole;
+import sinnott.concesionaria.employees.entitites.enums.EmployeeRole;
 
 @Data
 @NoArgsConstructor
@@ -22,12 +22,12 @@ public class EmployeeDTO {
 
     @NotEmpty(message = "El apellido no puede estar vacío")
     @Schema(example = "Sanchez")
-    private String surname;
+    private String lastName;
 
     @NotNull(message = "El ID de la persona no puede ser nulo")
     @Min(value = 1, message = "El ID de la persona debe ser mayor a 0")
     @Schema(example = "1111")
-    private Integer IdentityId;
+    private Integer identityId;
 
     @NotNull(message = "El rol no puede ser nulo")
     @Schema(example = "ADMIN")
@@ -36,5 +36,5 @@ public class EmployeeDTO {
     @NotNull(message = "El ID de la sucursal no puede ser nulo")
     @Min(value = 1, message = "El ID de la sucursal debe ser mayor a 0")
     @Schema(example = "1")
-    private Long branchId;
+    private Integer branchId;
 }

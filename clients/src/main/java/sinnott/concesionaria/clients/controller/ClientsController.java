@@ -1,7 +1,16 @@
 package sinnott.concesionaria.clients.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -55,10 +64,17 @@ public class ClientsController {
     @GetMapping("/search")
     @Operation(summary = "Buscar clientes por cualquier combinación de atributos")
     public ResponseEntity<List<ClientDTO>> searchByParams(@RequestParam(required = false) String name,
-                                                          @RequestParam(required = false) String lastName, 
+                                                          @RequestParam(required = false) String lastName,
+                                                          @RequestParam(required = false) Integer identityId, 
                                                           @RequestParam(required = false) String email,
                                                           @RequestParam(required = false) String phone,
                                                           @RequestParam(required = false) String address) {
-        return ResponseEntity.ok(clientService.search(name, lastName, email, phone, address));
+        return ResponseEntity.ok(clientService.search(name, lastName, identityId, email, phone, address));
+    }
+
+    @GetMapping("/exists/{id}")
+    @Operation(summary = "Verificar si un cliente existe")
+    public ResponseEntity<Boolean> existsClient(@PathVariable Integer id) {
+        return ResponseEntity.ok(clientService.existsClient(id));
     }
 }

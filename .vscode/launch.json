@@ -63,6 +63,16 @@
             "projectName": "branchs",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-SalesApplication<sales>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "sinnott.concesionaria.sales.SalesApplication",
+            "projectName": "sales",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

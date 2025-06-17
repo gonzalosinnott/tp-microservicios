@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import sinnott.concesionaria.branchs.entitites.BranchDTO;
+import sinnott.concesionaria.branchs.entitites.enums.Country;
 import sinnott.concesionaria.branchs.service.BranchService;
-import sinnott.concesionaria.branchs.models.enums.Country;
 
 import java.util.List;
 

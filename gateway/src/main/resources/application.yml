@@ -41,7 +41,12 @@ spring:
             - Path=/stock,/stock/**,/v3/api-docs/stock
           filters:
             - RewritePath=/v3/api-docs/stock, /v3/api-docs
-
+        - id: sales
+          uri: lb://sales
+          predicates:
+            - Path=/sales,/sales/**,/v3/api-docs/sales
+          filters:
+            - RewritePath=/v3/api-docs/sales, /v3/api-docs
 eureka:
   instance:
     prefer-ip-address: true
@@ -57,11 +62,13 @@ springdoc:
     path: /swagger-ui.html
     urls:
       - url: /v3/api-docs/employees
-        name: Employees API
+        name: Empleados API
       - url: /v3/api-docs/clients
-        name: Clients API
+        name: Clientes API
       - url: /v3/api-docs/branchs
-        name: Branches API
+        name: Sucursales API
       - url: /v3/api-docs/stock
         name: Stock API
-    urls-primary-name: Employees API
+      - url: /v3/api-docs/sales
+        name: Ventas API
+    urls-primary-name: Concesionaria API
