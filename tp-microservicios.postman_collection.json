@@ -1,0 +1,176 @@
+{
+  "info": {
+    "name": "TP Microservicios API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Branchs Service",
+      "item": [
+        {
+          "name": "Get All Branchs",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/branchs"
+          }
+        },
+        {
+          "name": "Get Branch by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/branchs/:id"
+          }
+        },
+        {
+          "name": "Create Branch",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Central\",\n  \"country\": \"ARGENTINA\",\n  \"province\": \"Buenos Aires\",\n  \"city\": \"La Plata\",\n  \"address\": \"Calle 1 123\",\n  \"openingDate\": \"2024-01-01\",\n  \"deliveryTimeFromCentralWarehouse\": 5,\n  \"deliveryTimeFromBranch\": 2\n}"
+            },
+            "url": "{{baseUrl}}/branchs"
+          }
+        },
+        {
+          "name": "Update Branch",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  /* updated fields */\n}"
+            },
+            "url": "{{baseUrl}}/branchs/:id"
+          }
+        },
+        {
+          "name": "Delete Branch",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/branchs/:id"
+          }
+        },
+        {
+          "name": "Search Branchs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/branchs/search?name=&country=&province=&city=&address=",
+              "host": ["{{baseUrl}}"],
+              "path": ["branchs","search"],
+              "query": [
+                {"key":"name","value":""},
+                {"key":"country","value":""},
+                {"key":"province","value":""},
+                {"key":"city","value":""},
+                {"key":"address","value":""}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Exists Branch",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/branchs/exists/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clients Service",
+      "item": [
+        {
+          "name": "Get All Clients",
+          "request": { "method": "GET", "url": "{{baseUrl}}/clients" }
+        },
+        {
+          "name": "Get Client by ID",
+          "request": { "method": "GET", "url": "{{baseUrl}}/clients/:id" }
+        },
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Juan\",\n  \"lastName\": \"Perez\",\n  \"identityId\": 12345678,\n  \"email\": \"juan@example.com\",\n  \"phone\": \"123456\",\n  \"address\": \"Calle Falsa 123\"\n}" },
+            "url": "{{baseUrl}}/clients"
+          }
+        },
+        {
+          "name": "Update Client",
+          "request": { "method": "PUT", "url": "{{baseUrl}}/clients/:id" }
+        },
+        { "name": "Delete Client", "request": { "method": "DELETE", "url": "{{baseUrl}}/clients/:id" } },
+        { "name": "Search Clients", "request": { "method": "GET", "url": "{{baseUrl}}/clients/search?name=&lastName=&identityId=&email=&phone=&address=" } },
+        { "name": "Exists Client", "request": { "method": "GET", "url": "{{baseUrl}}/clients/exists/:id" } }
+      ]
+    },
+    {
+      "name": "Employees Service",
+      "item": [
+        { "name": "Get All Employees", "request": { "method": "GET", "url": "{{baseUrl}}/employees" } },
+        { "name": "Get Employee by ID", "request": { "method": "GET", "url": "{{baseUrl}}/employees/:id" } },
+        { "name": "Create Employee", "request": { "method": "POST", "url": "{{baseUrl}}/employees" } },
+        { "name": "Update Employee", "request": { "method": "PUT", "url": "{{baseUrl}}/employees/:id" } },
+        { "name": "Delete Employee", "request": { "method": "DELETE", "url": "{{baseUrl}}/employees/:id" } },
+        { "name": "Search Employees", "request": { "method": "GET", "url": "{{baseUrl}}/employees/search?name=&lastName=&identityId=&role=&branchId=" } },
+        { "name": "Exists Employee", "request": { "method": "GET", "url": "{{baseUrl}}/employees/exists/:id" } }
+      ]
+    },
+    {
+      "name": "Stock Service - Cars",
+      "item": [
+        { "name": "Get All Cars", "request": { "method": "GET", "url": "{{baseUrl}}/stock/catalog/cars" } },
+        { "name": "Get Car by ID", "request": { "method": "GET", "url": "{{baseUrl}}/stock/catalog/cars/:id" } },
+        { "name": "Create Car", "request": { "method": "POST", "url": "{{baseUrl}}/stock/catalog/cars" } },
+        { "name": "Update Car", "request": { "method": "PUT", "url": "{{baseUrl}}/stock/catalog/cars/:id" } },
+        { "name": "Delete Car", "request": { "method": "DELETE", "url": "{{baseUrl}}/stock/catalog/cars/:id" } },
+        { "name": "Search Cars", "request": { "method": "GET", "url": "{{baseUrl}}/stock/catalog/cars/search?brand=&model=&year=&type=" } }
+      ]
+    },
+    {
+      "name": "Stock Service - Inventory",
+      "item": [
+        { "name": "Get All Inventory", "request": { "method": "GET", "url": "{{baseUrl}}/stock/inventory" } },
+        { "name": "Get Inventory by ID", "request": { "method": "GET", "url": "{{baseUrl}}/stock/inventory/:id" } },
+        { "name": "Create Inventory", "request": { "method": "POST", "url": "{{baseUrl}}/stock/inventory" } },
+        { "name": "Update Inventory", "request": { "method": "PUT", "url": "{{baseUrl}}/stock/inventory/:id" } },
+        { "name": "Delete Inventory", "request": { "method": "DELETE", "url": "{{baseUrl}}/stock/inventory/:id" } },
+        { "name": "Search Inventory", "request": { "method": "GET", "url": "{{baseUrl}}/stock/inventory/search?carId=&branchId=&stock=" } }
+      ]
+    },
+    {
+      "name": "Sales Service - Billing",
+      "item": [
+        { "name": "Get All Billing", "request": { "method": "GET", "url": "{{baseUrl}}/sales/billing" } },
+        { "name": "Get Billing by ID", "request": { "method": "GET", "url": "{{baseUrl}}/sales/billing/:id" } },
+        { "name": "Create Billing", "request": { "method": "POST", "url": "{{baseUrl}}/sales/billing" } },
+        { "name": "Delete Billing", "request": { "method": "DELETE", "url": "{{baseUrl}}/sales/billing/:id" } },
+        { "name": "Search Billing", "request": { "method": "GET", "url": "{{baseUrl}}/sales/billing/search?employeeId=&carId=&clientId=&saleDate=" } }
+      ]
+    },
+    {
+      "name": "Sales Service - Repairs",
+      "item": [
+        { "name": "Get All Repairs", "request": { "method": "GET", "url": "{{baseUrl}}/sales/repairs" } },
+        { "name": "Get Repair by ID", "request": { "method": "GET", "url": "{{baseUrl}}/sales/repairs/:id" } },
+        { "name": "Create Repair", "request": { "method": "POST", "url": "{{baseUrl}}/sales/repairs" } },
+        { "name": "Delete Repair", "request": { "method": "DELETE", "url": "{{baseUrl}}/sales/repairs/:id" } },
+        { "name": "Search Repairs", "request": { "method": "GET", "url": "{{baseUrl}}/sales/repairs/search?employeeId=&carId=&repairDate=" } }
+      ]
+    }
+  ]
+} 
