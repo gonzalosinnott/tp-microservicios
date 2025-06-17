@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import sinnott.concesionaria.sales.clients.ClientsClient;
@@ -17,9 +18,9 @@ import sinnott.concesionaria.sales.entities.repair.Repair;
 import sinnott.concesionaria.sales.entities.repair.RepairDTO;
 import sinnott.concesionaria.sales.entities.repair.RepairSummaryDTO;
 import sinnott.concesionaria.sales.entities.sale.Sale;
-import sinnott.concesionaria.sales.entities.sale.SaleDTO;
 import sinnott.concesionaria.sales.repository.SaleRepository;
 
+@Component
 public class Assistance {
 
     private final EmployeeClient employeeClient;
@@ -66,21 +67,23 @@ public class Assistance {
         repairSummaryDTO.setCar(car.getBrand() + " " + car.getType() + " " + car.getModel() + " " + car.getFabricationYear());
         repairSummaryDTO.setVehicleKm(repair.getVehicleKm());
         repairSummaryDTO.setRepairDate(repair.getRepairDate());
-        repairSummaryDTO.setHasWarranty(checkWarranty(car.getType(), sale.get().getSaleDate()));
+        repairSummaryDTO.setHasWarranty(checkWarranty(car.getType(), sale.get().getSaleDate(), repair.getVehicleKm()));
 
         return repairSummaryDTO;
     }
 
     // POR DECISION DE NEGOCIO lA GARANTIA ES DE 3 AÑOS PARA LOS AUTO NUEVOS Y 1 AÑO PARA LOS AUTO USADOS
-    private boolean checkWarranty(CarType carType, LocalDate saleDate) {
+    private boolean checkWarranty(CarType carType, LocalDate saleDate, Double vehicleKm) {
         LocalDate newCarWarrantyDate = LocalDate.now().minusYears(3);
         LocalDate usedCarWarrantyDate = LocalDate.now().minusYears(1);
 
-        if (carType.equals(CarType.NEW) && saleDate.isAfter(newCarWarrantyDate)) {
+        if (carType.equals(CarType.NEW) && 
+            (saleDate.isAfter(newCarWarrantyDate) || vehicleKm < 100000)) {
             return true;
         }
 
-        if (carType.equals(CarType.USED) && saleDate.isAfter(usedCarWarrantyDate)) {
+        if (carType.equals(CarType.USED) && 
+            (saleDate.isAfter(usedCarWarrantyDate) || vehicleKm < 50000)) {
             return true;
         }
 
