@@ -1,32 +1,51 @@
 # TP Microservicios
 
-Plataforma demostrativa basada en Spring Cloud que expone un conjunto de **micro-servicios** para la gestión integral de una concesionaria de autos.
+Plataforma demostrativa basada en Spring que expone un conjunto de **micro-servicios** para la gestión integral de una concesionaria de autos.
 
----
+## Instrucciones
+
+Inicializar los proyectos en el siguiente orden:
+
+  * 1- **eureka-server**
+  * 2- **gateway**
+  * 3-  **Micro-servicios de dominio** `(branchs, clients, employees, stock, sales)`
+
+  Luego se puede testear la aplicacion de dos formas:
+
+   * Ingresar a http://localhost:8080/swagger-ui.html
+   * Importar la coleccion de Postman `(tp-microservicios.postman_collection.json)` que se encuentra en el directorio raiz.
+
+
 ## 1 · Arquitectura general
 
-### Vista de alto nivel
 ```mermaid
-graph TD
-  Client["Client (Browser / Postman)"] --> Gateway["Spring Cloud Gateway"]
-  Gateway --> BranchsService["Branchs Service"]
-  Gateway --> ClientsService["Clients Service"]
-  Gateway --> EmployeesService["Employees Service"]
-  Gateway --> StockService["Stock Service"]
-  Gateway --> SalesService["Sales Service"]
-  Gateway <--> Eureka["Eureka Server (Service Registry)"]
-  BranchsService --> BranchsDB["Branchs DB"]
-  ClientsService --> ClientsDB["Clients DB"]
-  EmployeesService --> EmployeesDB["Employees DB"]
-  StockService --> StockDB["Stock DB"]
-  SalesService --> SalesDB["Sales DB"]
-  style Gateway fill:#f9f,stroke:#333,stroke-width:1px
-  %% Inter-service calls
-  SalesService --- ClientsService
-  SalesService --- EmployeesService
-  SalesService --- BranchsService
-  SalesService --- StockService
-  StockService --- BranchsService
+flowchart TD
+    A[Client]
+    B[Gateway]
+    C[Eureka Server]
+    D[Clients Service]
+    E[Employees Service]
+    F[Branchs Service]
+    G[Stock Service]
+    H[Sales Service]
+    I[(Clients BD)]
+    J[(Employees BD)]
+    K[(Clients BD)]
+    L[(Stock BD)]
+    M[(Sales BD)]
+
+    A --> B
+    B <--> C
+    B --> D
+    B --> E
+    B --> F
+    B --> G
+    B --> H
+    D --> I
+    E --> J
+    F --> K
+    G --> L
+    H --> M
 ```
 
 ### Componentes
@@ -40,7 +59,6 @@ graph TD
   * `sales` – ventas y reparaciones post-venta.
 * **commons** – librería compartida (CORS, manejo global de excepciones, modelos comunes).
 
----
 ## 2 · API pública por servicio
 
 A continuación se detallan los endpoints disponibles para cada micro-servicio. Todos son accesibles a través del API Gateway (`http://localhost:8080`).
@@ -102,11 +120,10 @@ A continuación se detallan los endpoints disponibles para cada micro-servicio. 
 - **`DELETE /{id}`**: Eliminar un servicio de reparación.
 - **`GET /search`**: Buscar reparaciones por ID de empleado, ID de auto o fecha.
 
-> Para probarlos rápidamente, importa la colección Postman mencionada en la sección 4.
 
----
 ## 3 · Modelo de datos y persistencia
-Cada micro-servicio posee **su propia base de datos / esquema**. Las relaciones se resuelven a nivel de aplicación mediante IDs; no hay acoplamiento de base de datos compartida.
+
+Cada micro-servicio posee **su propia base de datos / esquema**. Las relaciones se resuelven a nivel de aplicación mediante IDs.
 
 ```mermaid
 erDiagram
@@ -175,13 +192,3 @@ erDiagram
   SALE ||--o{ REPAIR : "may lead to"
   CAR ||--o{ INVENTORY : "listed"
 ```
-
----
-## 4 · Colección Postman
-Se añadió en la raíz del repo el archivo `tp-microservicios.postman_collection.json` con todos los endpoints agrupados.
-
-1. **Importar** el archivo en Postman/Insomnia.
-2. Configurar la variable de entorno `baseUrl` (por defecto `http://localhost:8080`, que es el Gateway).
-3. Navegar por las carpetas de cada micro-servicio y ejecutar las peticiones.
-
----

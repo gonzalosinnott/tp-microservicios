@@ -15,18 +15,18 @@ public class CarDTO {
     private Integer id;
 
     @NotEmpty(message = "La marca es requerida")
-    @Schema(example = "Ford")
+    @Schema(example = "Chevrolet")
     private String brand;
 
     @NotEmpty(message = "El modelo es requerido")
-    @Schema(example = "Mustang")
+    @Schema(example = "Corsa")
     private String model;
 
     @NotEmpty(message = "El año de fabricación es requerido")
-    @Schema(example = "2024")
+    @Schema(example = "2018")
     private Integer fabricationYear;
 
     @NotEmpty(message = "El tipo es requerido")
-    @Schema(example = "NEW")
+    @Schema(example = "USED")
     private CarType type;
 } 

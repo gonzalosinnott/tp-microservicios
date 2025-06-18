@@ -64,7 +64,7 @@ public class Assistance {
         repairSummaryDTO.setSaleID(sale.get().getId());
         repairSummaryDTO.setClient(client.getName() + " " + client.getLastname());
         repairSummaryDTO.setEmployee(employee.getName() + " " + employee.getLastName());
-        repairSummaryDTO.setCar(car.getBrand() + " " + car.getType() + " " + car.getModel() + " " + car.getFabricationYear());
+        repairSummaryDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " -  " + car.getType());
         repairSummaryDTO.setVehicleKm(repair.getVehicleKm());
         repairSummaryDTO.setRepairDate(repair.getRepairDate());
         repairSummaryDTO.setHasWarranty(checkWarranty(car.getType(), sale.get().getSaleDate(), repair.getVehicleKm()));

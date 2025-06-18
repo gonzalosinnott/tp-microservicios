@@ -25,7 +25,7 @@ public class RepairDTO {
     
     @NotNull(message = "El ID de la venta no puede ser nulo")
     @Min(value = 1, message = "El ID de la venta debe ser mayor a 0")
-    @Schema(example = "10")
+    @Schema(example = "1")
     private Integer saleId;
     
     @NotNull(message = "El kilometraje del vehículo no puede ser nulo")

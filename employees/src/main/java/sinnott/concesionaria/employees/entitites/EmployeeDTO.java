@@ -21,7 +21,7 @@ public class EmployeeDTO {
     private String name;
 
     @NotEmpty(message = "El apellido no puede estar vacío")
-    @Schema(example = "Sanchez")
+    @Schema(example = "Castaño")
     private String lastName;
 
     @NotNull(message = "El ID de la persona no puede ser nulo")
@@ -30,7 +30,7 @@ public class EmployeeDTO {
     private Integer identityId;
 
     @NotNull(message = "El rol no puede ser nulo")
-    @Schema(example = "ADMIN")
+    @Schema(example = "SELLER")
     private EmployeeRole role;
 
     @NotNull(message = "El ID de la sucursal no puede ser nulo")

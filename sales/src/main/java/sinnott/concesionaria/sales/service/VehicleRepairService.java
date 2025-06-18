@@ -28,9 +28,9 @@ public class VehicleRepairService {
 
     public List<RepairSummaryDTO> getAllVehicleRepairs() {
         return repairRepository.findAll()
-                             .stream()
-                             .map(assistance::format)
-                             .collect(Collectors.toList());
+                               .stream()
+                               .map(assistance::format)
+                               .collect(Collectors.toList());
     }
 
     public RepairSummaryDTO getVehicleRepairById(Integer id) {

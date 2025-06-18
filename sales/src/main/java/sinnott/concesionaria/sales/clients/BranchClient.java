@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import sinnott.concesionaria.sales.clients.dto.BranchDTO;
 
-@FeignClient(name = "branch", path = "/branch")
+@FeignClient(name = "branchs", path = "/branchs")
 public interface BranchClient {
 
     @GetMapping("/{id}")

@@ -20,10 +20,10 @@ public class InventoryService {
     private final CarRepository carRepository;
     private final BranchClient branchClient;
 
-    public InventoryService(InventoryRepository stockRepository, CarRepository carRepository) {
+    public InventoryService(InventoryRepository stockRepository, CarRepository carRepository, BranchClient branchClient) {
         this.stockRepository = stockRepository;
         this.carRepository = carRepository;
-        this.branchClient = null;
+        this.branchClient = branchClient;
     }
 
     public List<InventoryDTO> getAllInventory() {

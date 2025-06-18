@@ -23,12 +23,12 @@ public class SaleDTO {
 
     @NotNull(message = "El ID del auto no puede ser nulo")
     @Min(value = 1, message = "El ID del auto debe ser mayor a 0")
-    @Schema(example = "10")
+    @Schema(example = "2")
     private Integer carId;
 
     @NotNull(message = "El ID del cliente no puede ser nulo")
     @Min(value = 1, message = "El ID del cliente debe ser mayor a 0")
-    @Schema(example = "1")
+    @Schema(example = "4")
     private Integer clientId;
 
     @NotNull(message = "El monto no puede ser nulo")
@@ -36,6 +36,6 @@ public class SaleDTO {
     private Double amount;
 
     @NotNull(message = "La fecha no puede ser nula")
-    @Schema(example = "2024-01-10")
+    @Schema(example = "2025-06-17")
     private LocalDate saleDate;
 } 

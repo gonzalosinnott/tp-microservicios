@@ -19,7 +19,7 @@ InventoryDTO {
     private Integer carId;
 
     @NotNull(message = "El ID de la sucursal no puede ser nulo")    
-    @Schema(example = "1")
+    @Schema(example = "5")
     private Integer branchId;
 
     @NotNull(message = "El stock no puede ser nulo")

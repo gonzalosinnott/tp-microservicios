@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import sinnott.concesionaria.stock.entities.car.enums.CarType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Data
 @NoArgsConstructor
@@ -27,6 +29,7 @@ public class Car {
    
     private Integer fabricationYear;
 
+    @Enumerated(EnumType.STRING)
     private CarType type;
    
     public Car(String brand, String model, Integer fabricationYear, CarType type) {
