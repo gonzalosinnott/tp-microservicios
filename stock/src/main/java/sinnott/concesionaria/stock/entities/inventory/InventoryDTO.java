@@ -2,9 +2,13 @@ package sinnott.concesionaria.stock.entities.inventory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class InventoryDTO {
 
     @Schema(hidden = true)
@@ -21,11 +25,4 @@ public class InventoryDTO {
     @NotNull(message = "El stock no puede ser nulo")
     @Schema(example = "1")
     private Integer stock;
-
-    public InventoryDTO(Integer id, Integer carId, Integer branchId, Integer stock) {
-        this.id = id;
-        this.carId = carId;
-        this.branchId = branchId;
-        this.stock = stock;
-    }
 } 

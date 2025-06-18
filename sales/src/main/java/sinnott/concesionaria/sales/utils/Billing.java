@@ -66,8 +66,8 @@ public class Billing {
 
         SaleSummaryDTO saleSummaryDTO = new SaleSummaryDTO();
 
-        saleSummaryDTO.setSaleID(sale.getId());
-        saleSummaryDTO.setClient(client.getName() + " " + client.getLastname());
+        saleSummaryDTO.setId(sale.getId());
+        saleSummaryDTO.setClient(client.getName() + " " + client.getLastName());
         saleSummaryDTO.setEmployee(employee.getName() + " " + employee.getLastName());
         saleSummaryDTO.setBranch(branch.getName() + " - " + branch.getCity() + " - " + branch.getProvince());
         saleSummaryDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " - " + car.getType());
@@ -94,12 +94,13 @@ public class Billing {
             deliveryTime = branch.getDeliveryTimeFromCentralWarehouse();
         }
 
+        inventory.get().setStock(inventory.get().getStock() - 1);
         updateInventory(inventory.get());
 
         BillingDTO billingDTO = new BillingDTO();
         
-        billingDTO.setSaleID(sale.getId());
-        billingDTO.setClient(client.getName() + " " + client.getLastname());
+        billingDTO.setId(sale.getId());
+        billingDTO.setClient(client.getName() + " " + client.getLastName());
         billingDTO.setEmployee(employee.getName() + " " + employee.getLastName());
         billingDTO.setBranch(branch.getName() + " - " + branch.getCity() + " - " + branch.getProvince());
         billingDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " - " + car.getType());

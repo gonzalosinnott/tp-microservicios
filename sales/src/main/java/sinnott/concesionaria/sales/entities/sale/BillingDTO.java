@@ -2,13 +2,15 @@ package sinnott.concesionaria.sales.entities.sale;
 
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BillingDTO {
-    private Integer saleID;
+    private Integer id;
     private String client;
     private String employee;
     private String branch;

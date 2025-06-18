@@ -55,19 +55,20 @@ public class Assistance {
     public RepairSummaryDTO format(Repair repair) {
         EmployeeDTO employee = employeeClient.getEmployeeById(repair.getEmployeeId());
         ClientDTO client = clientsClient.getClientById(repair.getClientId());
-        Optional<Sale> sale = saleRepository.findById(repair.getSaleId());
-        CarDTO car = stockClient.getCarById(sale.get().getCarId());
+        Sale sale = saleRepository.findById(repair.getSaleId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Venta no encontrada para la reparación con ID: " + repair.getId()));
+        CarDTO car = stockClient.getCarById(sale.getCarId());
    
         RepairSummaryDTO repairSummaryDTO = new RepairSummaryDTO();
 
         repairSummaryDTO.setRepairID(repair.getId());
-        repairSummaryDTO.setSaleID(sale.get().getId());
-        repairSummaryDTO.setClient(client.getName() + " " + client.getLastname());
+        repairSummaryDTO.setSaleID(sale.getId());
+        repairSummaryDTO.setClient(client.getName() + " " + client.getLastName());
         repairSummaryDTO.setEmployee(employee.getName() + " " + employee.getLastName());
         repairSummaryDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " -  " + car.getType());
         repairSummaryDTO.setVehicleKm(repair.getVehicleKm());
         repairSummaryDTO.setRepairDate(repair.getRepairDate());
-        repairSummaryDTO.setHasWarranty(checkWarranty(car.getType(), sale.get().getSaleDate(), repair.getVehicleKm()));
+        repairSummaryDTO.setHasWarranty(checkWarranty(car.getType(), sale.getSaleDate(), repair.getVehicleKm()));
 
         return repairSummaryDTO;
     }

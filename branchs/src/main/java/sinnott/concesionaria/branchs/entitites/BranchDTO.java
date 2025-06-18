@@ -3,11 +3,15 @@ package sinnott.concesionaria.branchs.entitites;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import sinnott.concesionaria.branchs.entitites.enums.Country;
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BranchDTO {
     @Schema(hidden = true)
     private Integer id;
@@ -43,18 +47,4 @@ public class BranchDTO {
     @NotNull(message = "El tiempo de entrega desde la sucursal no puede ser nulo")
     @Schema(description = "Tiempo de entrega desde la sucursal")
     private Integer deliveryTimeFromBranch;
-
-    public BranchDTO(Integer id, String name, Country country, String province, String city, String address,
-                     LocalDate openingDate, Integer deliveryTimeFromCentralWarehouse, Integer deliveryTimeFromBranch) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-        this.province = province;
-        this.city = city;
-        this.address = address;
-        this.openingDate = openingDate;
-        this.deliveryTimeFromCentralWarehouse = deliveryTimeFromCentralWarehouse;
-        this.deliveryTimeFromBranch = deliveryTimeFromBranch;
-    }
-
 } 

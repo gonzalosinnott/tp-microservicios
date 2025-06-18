@@ -14,8 +14,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"brand", "model", "fabricationYear"}))
 public class Car {

@@ -15,8 +15,8 @@ import sinnott.concesionaria.branchs.entitites.enums.Country;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"province", "city"}))
 public class Branch {

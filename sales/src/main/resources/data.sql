@@ -9,7 +9,8 @@ INSERT INTO Sale (employee_id, car_id, client_id, amount, sale_date) VALUES
 (7, 1, 6, 85000.00, '2023-12-10'),
 (8, 3, 7, 95000.00, '2023-11-25'),
 (9, 5, 8, 105000.00, '2023-10-15'),
-(10, 2, 9, 115000.00, '2023-09-30');
+(10, 2, 9, 115000.00, '2023-09-30'),
+(3, 4, 10, 125000.00, '2023-08-25');
 
 -- Insert sample data for Repairs
 -- Assumes Sale IDs exist from the records above

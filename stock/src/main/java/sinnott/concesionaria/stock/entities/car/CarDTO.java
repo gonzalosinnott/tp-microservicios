@@ -2,10 +2,14 @@ package sinnott.concesionaria.stock.entities.car;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import sinnott.concesionaria.stock.entities.car.enums.CarType;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CarDTO {
 
     @Schema(hidden = true)
@@ -26,12 +30,4 @@ public class CarDTO {
     @NotEmpty(message = "El tipo es requerido")
     @Schema(example = "USED")
     private CarType type;
-
-    public CarDTO(Integer id, String brand, String model, Integer fabricationYear, CarType type) {
-        this.id = id;
-        this.brand = brand;
-        this.model = model;
-        this.fabricationYear = fabricationYear;
-        this.type = type;
-    }
 } 
