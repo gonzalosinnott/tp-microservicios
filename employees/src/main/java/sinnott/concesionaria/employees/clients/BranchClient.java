@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface BranchClient {
 
     @GetMapping("/exists/{id}")
-    public Boolean existsBranch(@PathVariable Integer id);
+    boolean existsBranch(@PathVariable("id") Integer id);
 
 } 

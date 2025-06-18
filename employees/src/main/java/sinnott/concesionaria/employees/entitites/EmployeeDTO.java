@@ -4,15 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import sinnott.concesionaria.employees.entitites.enums.EmployeeRole;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class EmployeeDTO {
+    
     @Schema(hidden = true)
     private Integer id;
 
@@ -37,4 +34,15 @@ public class EmployeeDTO {
     @Min(value = 1, message = "El ID de la sucursal debe ser mayor a 0")
     @Schema(example = "1")
     private Integer branchId;
+
+    public EmployeeDTO(Integer id, String name, String lastName, 
+                       Integer identityId, EmployeeRole role, Integer branchId) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.identityId = identityId;
+        this.role = role;
+        this.branchId = branchId;
+    }
+
 }

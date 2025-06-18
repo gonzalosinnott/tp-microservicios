@@ -40,7 +40,7 @@ public class ClientService {
         Client client = clientRepository.findById(id)
                                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));;
         client.setName(clientDTO.getName());
-        client.setLastName(clientDTO.getLastname());
+        client.setLastName(clientDTO.getLastName());
         client.setPhone(clientDTO.getPhone());
         client.setAddress(clientDTO.getAddress());
         return ClientMapper.toDTO(clientRepository.save(client));

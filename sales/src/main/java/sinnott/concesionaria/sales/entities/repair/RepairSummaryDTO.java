@@ -2,13 +2,9 @@ package sinnott.concesionaria.sales.entities.repair;
 
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class RepairSummaryDTO {
     private Integer repairID;
     private Integer saleID;

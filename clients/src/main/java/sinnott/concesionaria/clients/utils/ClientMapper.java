@@ -5,21 +5,26 @@ import sinnott.concesionaria.clients.entitites.ClientDTO;
 
 public class ClientMapper {
     public static Client toEntity(ClientDTO clientDTO) {
-        return new Client(clientDTO.getName(),
-                          clientDTO.getLastname(),
-                          clientDTO.getIdentityId(),                          
-                          clientDTO.getEmail(),
-                          clientDTO.getPhone(),
-                          clientDTO.getAddress());
+        Client client = new Client();
+        client.setId(clientDTO.getId());
+        client.setName(clientDTO.getName());
+        client.setLastName(clientDTO.getLastName());
+        client.setIdentityId(clientDTO.getIdentityId());
+        client.setEmail(clientDTO.getEmail());
+        client.setPhone(clientDTO.getPhone());
+        client.setAddress(clientDTO.getAddress());
+        return client;
     }
 
     public static ClientDTO toDTO(Client client) {
-        return new ClientDTO(client.getId(),
-                             client.getName(),
-                             client.getLastName(),
-                             client.getIdentityId(),
-                             client.getEmail(),
-                             client.getPhone(),
-                             client.getAddress());
+        ClientDTO dto = new ClientDTO();
+        dto.setId(client.getId());
+        dto.setName(client.getName());
+        dto.setLastName(client.getLastName());
+        dto.setIdentityId(client.getIdentityId());
+        dto.setEmail(client.getEmail());
+        dto.setPhone(client.getPhone());
+        dto.setAddress(client.getAddress());
+        return dto;
     }
 } 

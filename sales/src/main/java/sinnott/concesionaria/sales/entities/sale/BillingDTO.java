@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class BillingDTO {
     private Integer saleID;

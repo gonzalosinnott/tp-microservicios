@@ -1,8 +1,6 @@
 package sinnott.concesionaria.clients.entitites;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -11,8 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ClientDTO {
     private Integer id;
     
@@ -22,7 +18,7 @@ public class ClientDTO {
     
     @NotBlank(message = "El apellido es requerido")
     @Schema(example = "Perez")
-    private String lastname;
+    private String lastName;
 
     @NotNull(message = "El ID de la persona no puede ser nulo")
     @Min(value = 1, message = "El ID de la persona debe ser mayor a 0")
