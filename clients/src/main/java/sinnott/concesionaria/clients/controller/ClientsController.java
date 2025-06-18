@@ -15,18 +15,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import sinnott.concesionaria.clients.entitites.ClientDTO;
-import sinnott.concesionaria.clients.service.ClientService;
+import sinnott.concesionaria.clients.service.IClientService;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
 @RequestMapping("/clients")
 @Tag(name = "Clientes", description = "API para la gestión de clientes")
 public class ClientsController {
 
-    private final ClientService clientService;
+    private final IClientService clientService;
 
-    public ClientsController(ClientService clientService) {
+    public ClientsController(@Qualifier("clientService") IClientService clientService) {
         this.clientService = clientService;
     }
 

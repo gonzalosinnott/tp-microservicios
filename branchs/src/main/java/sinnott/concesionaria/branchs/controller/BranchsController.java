@@ -7,18 +7,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import sinnott.concesionaria.branchs.entitites.BranchDTO;
 import sinnott.concesionaria.branchs.entitites.enums.Country;
-import sinnott.concesionaria.branchs.service.BranchService;
+import sinnott.concesionaria.branchs.service.IBranchService;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
 @RequestMapping("/branchs")
 @Tag(name = "Sucursales", description = "API para la gestión de sucursales")
 public class BranchsController {
 
-    private final BranchService branchService;
+    private final IBranchService branchService;
 
-    public BranchsController(BranchService branchService) {
+    public BranchsController(@Qualifier("branchService") IBranchService branchService) {
         this.branchService = branchService;
     }
 

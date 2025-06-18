@@ -47,6 +47,12 @@ spring:
             - Path=/sales,/sales/**,/v3/api-docs/sales
           filters:
             - RewritePath=/v3/api-docs/sales, /v3/api-docs
+        - id: repairs
+          uri: lb://repairs
+          predicates:
+          - Path=/repairs,/repairs/**,/v3/api-docs/repairs
+          filters:
+          - RewritePath=/v3/api-docs/repairs, /v3/api-docs
 eureka:
   instance:
     prefer-ip-address: true
@@ -71,4 +77,6 @@ springdoc:
         name: Stock API
       - url: /v3/api-docs/sales
         name: Ventas API
+      - url: /v3/api-docs/repairs
+        name: Service API
     urls-primary-name: Concesionaria API

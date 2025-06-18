@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CarService {
+public class CarService implements ICarService {
     private final CarRepository carRepository;
     private final InventoryRepository inventoryRepository;
 
@@ -24,47 +24,77 @@ public class CarService {
         this.inventoryRepository = inventoryRepository;
     }
 
+    @Override
     public List<CarDTO> getAllCars() {
-        return carRepository.findAll()
-                            .stream()
-                            .map(CarMapper::toDTO)
-                            .collect(Collectors.toList());
+        try {
+            return carRepository.findAll()
+                .stream()
+                .map(CarMapper::toDTO)
+                .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener autos", ex);
+        }
     }
 
+    @Override
     public CarDTO getCarById(Integer id) {
-        return carRepository.findById(id).map(CarMapper::toDTO)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Auto no encontrado"));
+        try {
+            return carRepository.findById(id).map(CarMapper::toDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Auto no encontrado"));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener auto", ex);
+        }
     }
 
+    @Override
     public CarDTO saveCar(CarDTO carDTO) {
-        Car car = CarMapper.toEntity(carDTO);
-        return CarMapper.toDTO(carRepository.save(car));
+        try {
+            Car car = CarMapper.toEntity(carDTO);
+            return CarMapper.toDTO(carRepository.save(car));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar auto", ex);
+        }
     }
 
+    @Override
     public CarDTO updateCar(Integer id, CarDTO carDTO) {
-        Car car = carRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Auto no encontrado"));
-        car.setBrand(carDTO.getBrand());
-        car.setModel(carDTO.getModel());
-        car.setFabricationYear(carDTO.getFabricationYear());
-        car.setType(carDTO.getType());
-        return CarMapper.toDTO(carRepository.save(car));
+        try {
+            Car car = carRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Auto no encontrado"));
+            car.setBrand(carDTO.getBrand());
+            car.setModel(carDTO.getModel());
+            car.setFabricationYear(carDTO.getFabricationYear());
+            car.setType(carDTO.getType());
+            return CarMapper.toDTO(carRepository.save(car));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar auto", ex);
+        }
     }
 
+    @Override
     public void deleteCar(Integer id) {
-        if (!carRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Auto no encontrado");
+        try {
+            if (!carRepository.existsById(id)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Auto no encontrado");
+            }
+            if (inventoryRepository.search(id, null, null).size() > 0) {    
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auto en inventario");
+            }
+            carRepository.deleteById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar auto", ex);
         }
-        if (inventoryRepository.search(id, null, null).size() > 0) {    
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Auto en inventario");
-        }
-        carRepository.deleteById(id);
     }
 
+    @Override
     public List<CarDTO> search(String brand, String model, Integer year, CarType type) {
-        return carRepository.search(brand, model, year, type)
-                            .stream()
-                            .map(CarMapper::toDTO)
-                            .collect(Collectors.toList());
+        try {
+            return carRepository.search(brand, model, year, type)
+                .stream()
+                .map(CarMapper::toDTO)
+                .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al buscar autos", ex);
+        }
     }
 } 

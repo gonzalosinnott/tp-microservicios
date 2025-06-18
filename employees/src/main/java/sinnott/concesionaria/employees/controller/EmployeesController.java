@@ -18,16 +18,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import sinnott.concesionaria.employees.entitites.EmployeeDTO;
 import sinnott.concesionaria.employees.entitites.enums.EmployeeRole;
-import sinnott.concesionaria.employees.service.EmployeeService;
+import sinnott.concesionaria.employees.service.IEmployeeService;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
 @RequestMapping("/employees")
 @Tag(name = "Empleados", description = "API para la gestión de empleados")
 public class EmployeesController {
 
-    private final EmployeeService employeeService;
+    private final IEmployeeService employeeService;
 
-    public EmployeesController(EmployeeService employeeService) {
+    public EmployeesController(@Qualifier("employeeService") IEmployeeService employeeService) {
         this.employeeService = employeeService;
     }
     

@@ -1,7 +1,7 @@
 package sinnott.concesionaria.sales.utils;
 
-import sinnott.concesionaria.sales.entities.sale.Sale;
-import sinnott.concesionaria.sales.entities.sale.SaleDTO;
+import sinnott.concesionaria.sales.entities.Sale;
+import sinnott.concesionaria.sales.entities.SaleDTO;
 
 public class SaleMapper {
 

@@ -8,16 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import sinnott.concesionaria.sales.entities.sale.BillingDTO;
-import sinnott.concesionaria.sales.entities.sale.Sale;
-import sinnott.concesionaria.sales.entities.sale.SaleDTO;
-import sinnott.concesionaria.sales.entities.sale.SaleSummaryDTO;
+import sinnott.concesionaria.sales.entities.BillingDTO;
+import sinnott.concesionaria.sales.entities.Sale;
+import sinnott.concesionaria.sales.entities.SaleDTO;
+import sinnott.concesionaria.sales.entities.SaleSummaryDTO;
 import sinnott.concesionaria.sales.repository.SaleRepository;
 import sinnott.concesionaria.sales.utils.Billing;
 import sinnott.concesionaria.sales.utils.SaleMapper;
 
 @Service
-public class BillingService {
+public class BillingService implements IBillingService {
 
     private final SaleRepository saleRepository;
     private final Billing billing;
@@ -27,37 +27,67 @@ public class BillingService {
         this.billing = billing;
     }
 
+    @Override
     public List<SaleSummaryDTO> getSales() {
-        return saleRepository.findAll()
-                             .stream()
-                             .map(billing::format)
-                             .collect(Collectors.toList());
+        try {
+            return saleRepository.findAll()
+                .stream()
+                .map(billing::format)
+                .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener ventas", ex);
+        }
     }
 
+    @Override
     public SaleSummaryDTO getSaleById(Integer id) {
-        Sale sale = saleRepository.findById(id)
-                                  .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Venta no encontrada"));
-        return billing.format(sale);
+        try {
+            Sale sale = saleRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Venta no encontrada"));
+            return billing.format(sale);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener venta", ex);
+        }
     }
 
+    @Override
     public BillingDTO saveSale(SaleDTO saleDTO) {
-        if (billing.checkBillingValidations(saleDTO)) {
-            return billing.processSale(saleRepository.save(SaleMapper.toEntity(saleDTO)));
+        try {
+            if (billing.checkBillingValidations(saleDTO)) {
+                return billing.processSale(saleRepository.save(SaleMapper.toEntity(saleDTO)));
+            }
+            return null;
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar venta", ex);
         }
-        return null;
     }
 
+    @Override
     public void deleteSale(Integer id) {
-        if (!saleRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Venta no encontrada");
+        try {
+            if (!saleRepository.existsById(id)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Venta no encontrada");
+            }
+            saleRepository.deleteById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar venta", ex);
         }
-        saleRepository.deleteById(id);
     }
 
+    @Override
     public List<SaleSummaryDTO> search(Integer employeeId, Integer carId, Integer clientId, LocalDate saleDate) {
-        return saleRepository.search(employeeId, carId, clientId, saleDate)
-                             .stream()
-                             .map(billing::format)
-                             .collect(Collectors.toList());
+        try {
+            return saleRepository.search(employeeId, carId, clientId, saleDate)
+                .stream()
+                .map(billing::format)
+                .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al buscar ventas", ex);
+        }
+    }
+
+    @Override
+    public boolean existsSale(Integer id) {
+        return saleRepository.existsById(id);
     }
 } 

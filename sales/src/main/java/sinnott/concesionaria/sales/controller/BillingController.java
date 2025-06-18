@@ -3,6 +3,7 @@ package sinnott.concesionaria.sales.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import sinnott.concesionaria.sales.entities.sale.BillingDTO;
-import sinnott.concesionaria.sales.entities.sale.SaleDTO;
-import sinnott.concesionaria.sales.entities.sale.SaleSummaryDTO;
-import sinnott.concesionaria.sales.service.BillingService;
+import sinnott.concesionaria.sales.entities.BillingDTO;
+import sinnott.concesionaria.sales.entities.SaleDTO;
+import sinnott.concesionaria.sales.entities.SaleSummaryDTO;
+import sinnott.concesionaria.sales.service.IBillingService;
 
 @RestController
 @RequestMapping("/sales")
 @Tag(name = "Ventas", description = "API para la gestión de ventas")
 public class BillingController {
 
-    private final BillingService saleService;
+    private final IBillingService saleService;
 
-    public BillingController(BillingService saleService) {
+    public BillingController(@Qualifier("billingService") IBillingService saleService) {
         this.saleService = saleService;
     }
 
@@ -64,5 +65,11 @@ public class BillingController {
                                                               @RequestParam(required = false) Integer clientId,
                                                               @RequestParam(required = false) LocalDate saleDate) {
         return ResponseEntity.ok(saleService.search(employeeId, carId, clientId, saleDate));
+    }
+
+    @GetMapping("/exists/{id}")
+    @Operation(summary = "Verificar si una venta existe")
+    public ResponseEntity<Boolean> existsSale(@PathVariable Integer id) {
+        return ResponseEntity.ok(saleService.existsSale(id));
     }
 } 

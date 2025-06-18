@@ -13,19 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import sinnott.concesionaria.stock.entities.car.CarDTO;
 import sinnott.concesionaria.stock.entities.car.enums.CarType;
-import sinnott.concesionaria.stock.service.CarService;
+import sinnott.concesionaria.stock.service.ICarService;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @RestController
 @RequestMapping("/stock")
 @Tag(name = "Catalogo Autos", description = "API para la gestion del catalogo de Autos")
 public class CarController {
-    private final CarService carService;
+    private final ICarService carService;
 
-    public CarController(CarService carService) {
+    public CarController(@Qualifier("carService") ICarService carService) {
         this.carService = carService;
     }
 

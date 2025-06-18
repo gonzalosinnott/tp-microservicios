@@ -1,4 +1,4 @@
-package sinnott.concesionaria.sales.entities.repair;
+package sinnott.concesionaria.sales.entities;
 
 import java.time.LocalDate;
 
@@ -14,22 +14,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Repair {
-
+public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     private Integer employeeId;
+    
+    private Integer carId;
+    
     private Integer clientId;
-    private Integer saleId;
-    private Double vehicleKm;
-    private LocalDate repairDate;
 
-    public Repair(Integer employeeId, Integer clientId, Integer saleId, Double vehicleKm, LocalDate repairDate) {
+    private Double amount;
+    
+    private LocalDate saleDate;
+
+    public Sale(Integer employeeId, Integer carId, Integer clientId, Double amount, LocalDate saleDate) {
         this.employeeId = employeeId;
+        this.carId = carId;
         this.clientId = clientId;
-        this.saleId = saleId;
-        this.vehicleKm = vehicleKm;
-        this.repairDate = repairDate;
+        this.amount = amount;
+        this.saleDate = saleDate;
     }
-}
+} 

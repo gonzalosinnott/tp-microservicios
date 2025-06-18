@@ -1,7 +1,7 @@
-package sinnott.concesionaria.sales.utils;
+package sinnott.concesionaria.repairs.utils;
 
-import sinnott.concesionaria.sales.entities.repair.Repair;
-import sinnott.concesionaria.sales.entities.repair.RepairDTO;
+import sinnott.concesionaria.repairs.entities.Repair;
+import sinnott.concesionaria.repairs.entities.RepairDTO;
 
 public class RepairMapper {
 

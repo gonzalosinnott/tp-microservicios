@@ -6,16 +6,20 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sinnott.concesionaria.stock.entities.inventory.InventoryDTO;
-import sinnott.concesionaria.stock.service.InventoryService;
+import sinnott.concesionaria.stock.service.IInventoryService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
+import sinnott.concesionaria.stock.entities.inventory.InventorySaleDTO;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/stock")
 @Tag(name = "Inventario", description = "API para la gestion de inventario")
 public class InventoryController {
-    private final InventoryService inventoryService;
+    private final IInventoryService inventoryService;
 
-    public InventoryController(InventoryService inventoryService) {
+    public InventoryController(@Qualifier("inventoryService") IInventoryService inventoryService) {
         this.inventoryService = inventoryService;
     }
 
@@ -56,5 +60,11 @@ public class InventoryController {
                                                               @RequestParam(required = false) Integer branchId,
                                                               @RequestParam(required = false) Integer stock) {
         return ResponseEntity.ok(inventoryService.search(carId, branchId, stock));
+    }
+
+    @PostMapping("/inventory/sale")
+    @Operation(summary = "Actualizar inventario por venta")
+    public ResponseEntity<InventoryDTO> updateInventoryForSale(@RequestBody InventorySaleDTO inventorySaleDTO) {
+            return ResponseEntity.ok(inventoryService.updateInventoryForSale(inventorySaleDTO));
     }
 } 

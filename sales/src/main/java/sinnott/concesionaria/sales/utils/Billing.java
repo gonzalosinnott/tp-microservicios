@@ -17,10 +17,11 @@ import sinnott.concesionaria.sales.clients.dto.CarDTO;
 import sinnott.concesionaria.sales.clients.dto.ClientDTO;
 import sinnott.concesionaria.sales.clients.dto.EmployeeDTO;
 import sinnott.concesionaria.sales.clients.dto.InventoryDTO;
-import sinnott.concesionaria.sales.entities.sale.BillingDTO;
-import sinnott.concesionaria.sales.entities.sale.Sale;
-import sinnott.concesionaria.sales.entities.sale.SaleDTO;
-import sinnott.concesionaria.sales.entities.sale.SaleSummaryDTO;
+import sinnott.concesionaria.sales.entities.BillingDTO;
+import sinnott.concesionaria.sales.entities.Sale;
+import sinnott.concesionaria.sales.entities.SaleDTO;
+import sinnott.concesionaria.sales.entities.SaleSummaryDTO;
+import sinnott.concesionaria.sales.clients.dto.InventorySaleDTO;
 
 @Component
 public class Billing {
@@ -39,17 +40,37 @@ public class Billing {
     }
 
     public Boolean checkBillingValidations(SaleDTO sale) {
-        if (!employeeClient.existsEmployee(sale.getEmployeeId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Empleado no encontrado");
+        try {
+            if (!employeeClient.existsEmployee(sale.getEmployeeId())) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Empleado no encontrado");
+            }
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al consultar microservicio de empleados", ex);
         }
 
-        EmployeeDTO employee = employeeClient.getEmployeeById(sale.getEmployeeId());
-        
-        if (!clientsClient.existsClient(sale.getClientId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+        EmployeeDTO employee;
+
+        try {
+            employee = employeeClient.getEmployeeById(sale.getEmployeeId());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al consultar microservicio de empleados", ex);
         }
 
-        List<Optional<InventoryDTO>> filteredInventory = getInventory(sale.getCarId(), employee.getBranchId());
+        try {
+            if (!clientsClient.existsClient(sale.getClientId())) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado");
+            }
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al consultar microservicio de clientes", ex);
+        }
+
+        List<Optional<InventoryDTO>> filteredInventory;
+
+        try {
+            filteredInventory = getInventory(sale.getCarId(), employee.getBranchId());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al consultar microservicio de stock", ex);
+        }
 
         if(filteredInventory.stream().allMatch(Optional::isEmpty)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No existe Stock de dicho auto en la sucursal o en casa central");
@@ -59,75 +80,80 @@ public class Billing {
     }
 
     public SaleSummaryDTO format(Sale sale) {
-        EmployeeDTO employee = employeeClient.getEmployeeById(sale.getEmployeeId());
-        BranchDTO branch = branchClient.getBranchById(employee.getBranchId());
-        ClientDTO client = clientsClient.getClientById(sale.getClientId());
-        CarDTO car = stockClient.getCarById(sale.getCarId());
-
-        SaleSummaryDTO saleSummaryDTO = new SaleSummaryDTO();
-
-        saleSummaryDTO.setId(sale.getId());
-        saleSummaryDTO.setClient(client.getName() + " " + client.getLastName());
-        saleSummaryDTO.setEmployee(employee.getName() + " " + employee.getLastName());
-        saleSummaryDTO.setBranch(branch.getName() + " - " + branch.getCity() + " - " + branch.getProvince());
-        saleSummaryDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " - " + car.getType());
-        saleSummaryDTO.setAmount(sale.getAmount());
-        saleSummaryDTO.setSaleDate(sale.getSaleDate());
-
-        return saleSummaryDTO;
+        try {
+            EmployeeDTO employee = employeeClient.getEmployeeById(sale.getEmployeeId());
+            BranchDTO branch = branchClient.getBranchById(employee.getBranchId());
+            ClientDTO client = clientsClient.getClientById(sale.getClientId());
+            CarDTO car = stockClient.getCarById(sale.getCarId());
+            SaleSummaryDTO saleSummaryDTO = new SaleSummaryDTO();
+            saleSummaryDTO.setId(sale.getId());
+            saleSummaryDTO.setClient(client.getName() + " " + client.getLastName());
+            saleSummaryDTO.setEmployee(employee.getName() + " " + employee.getLastName());
+            saleSummaryDTO.setBranch(branch.getName() + " - " + branch.getCity() + " - " + branch.getProvince());
+            saleSummaryDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear());
+            saleSummaryDTO.setType(car.getType());
+            saleSummaryDTO.setAmount(sale.getAmount());
+            saleSummaryDTO.setSaleDate(sale.getSaleDate());
+            return saleSummaryDTO;
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al consultar microservicios para armar resumen de venta", ex);
+        }
     }
 
     public BillingDTO processSale(Sale sale) {
-        EmployeeDTO employee = employeeClient.getEmployeeById(sale.getEmployeeId());
-        BranchDTO branch = branchClient.getBranchById(employee.getBranchId());
-        ClientDTO client = clientsClient.getClientById(sale.getClientId());
-        CarDTO car = stockClient.getCarById(sale.getCarId());
-        List<Optional<InventoryDTO>> filteredInventory = getInventory(sale.getCarId(), employee.getBranchId());
-        
-        ///Por decision de negocio se decide que se use primero el stock de la sucursal y luego el de casa central
-        Optional<InventoryDTO> inventory = filteredInventory.get(0);
+        try {
+            EmployeeDTO employee = employeeClient.getEmployeeById(sale.getEmployeeId());
+            BranchDTO branch = branchClient.getBranchById(employee.getBranchId());
+            ClientDTO client = clientsClient.getClientById(sale.getClientId());
+            CarDTO car = stockClient.getCarById(sale.getCarId());
+            List<Optional<InventoryDTO>> filteredInventory = getInventory(sale.getCarId(), employee.getBranchId());
+            Optional<InventoryDTO> inventory = filteredInventory.get(0);
+            Integer deliveryTime = branch.getDeliveryTimeFromBranch();
+            
+            if(inventory.get().getBranchId() != employee.getBranchId()) {
+                inventory = filteredInventory.get(1);
+                deliveryTime = branch.getDeliveryTimeFromCentralWarehouse();
+            }
 
-        Integer deliveryTime = branch.getDeliveryTimeFromBranch();
-        
-        if(inventory.get().getBranchId() != employee.getBranchId()) {
-            inventory = filteredInventory.get(1);
-            deliveryTime = branch.getDeliveryTimeFromCentralWarehouse();
+            InventorySaleDTO inventorySaleDTO = new InventorySaleDTO();
+            inventorySaleDTO.setCarId(inventory.get().getCarId());
+            inventorySaleDTO.setBranchId(inventory.get().getBranchId());
+            inventorySaleDTO.setQuantity(1);
+           
+            try {
+                stockClient.updateInventoryForSale(inventorySaleDTO);
+            } catch (Exception ex) {
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al actualizar inventario por venta en microservicio de stock", ex);
+            }
+            
+            BillingDTO billingDTO = new BillingDTO();
+            billingDTO.setId(sale.getId());
+            billingDTO.setClient(client.getName() + " " + client.getLastName());
+            billingDTO.setEmployee(employee.getName() + " " + employee.getLastName());
+            billingDTO.setBranch(branch.getName() + " - " + branch.getCity() + " - " + branch.getProvince());
+            billingDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " - " + car.getType());
+            billingDTO.setAmount(sale.getAmount());
+            billingDTO.setSaleDate(sale.getSaleDate());
+            billingDTO.setDeliveryDate(sale.getSaleDate().plusDays(deliveryTime));
+            return billingDTO;
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al procesar venta con microservicios", ex);
         }
-
-        inventory.get().setStock(inventory.get().getStock() - 1);
-        updateInventory(inventory.get());
-
-        BillingDTO billingDTO = new BillingDTO();
-        
-        billingDTO.setId(sale.getId());
-        billingDTO.setClient(client.getName() + " " + client.getLastName());
-        billingDTO.setEmployee(employee.getName() + " " + employee.getLastName());
-        billingDTO.setBranch(branch.getName() + " - " + branch.getCity() + " - " + branch.getProvince());
-        billingDTO.setCar(car.getBrand() + " - " + car.getModel() + " - " + car.getFabricationYear() + " - " + car.getType());
-        billingDTO.setAmount(sale.getAmount());
-        billingDTO.setSaleDate(sale.getSaleDate());
-        billingDTO.setDeliveryDate(sale.getSaleDate().plusDays(deliveryTime));
-
-        return billingDTO;
     }
 
     private List<Optional<InventoryDTO>> getInventory(Integer carId, Integer branchId) {
-        List<InventoryDTO> inventory = stockClient.searchInventory(carId, branchId, null);
-        List<Optional<InventoryDTO>> filteredInventory = new ArrayList<>();
-
-        filteredInventory.add(inventory.stream()
-                                        .filter(item -> item.getBranchId() == branchId && item.getStock() > 0)
-                                        .findFirst());
-
-        filteredInventory.add(inventory.stream()
-                                        .filter(item -> item.getBranchId() == 1 && item.getStock() > 0)
-                                        .findFirst());
-
-        return filteredInventory;
+        try {
+            List<InventoryDTO> inventory = stockClient.searchInventory(carId, branchId, null);
+            List<Optional<InventoryDTO>> filteredInventory = new ArrayList<>();
+            filteredInventory.add(inventory.stream()
+                                            .filter(item -> item.getBranchId() == branchId && item.getStock() > 0)
+                                            .findFirst());
+            filteredInventory.add(inventory.stream()
+                                            .filter(item -> item.getBranchId() == 1 && item.getStock() > 0)
+                                            .findFirst());
+            return filteredInventory;
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Error al consultar inventario en microservicio de stock", ex);
+        }
     }
-
-    private void updateInventory(InventoryDTO inventoryDTO) {
-        stockClient.updateInventory(inventoryDTO.getId(), inventoryDTO);
-    }
-
 }

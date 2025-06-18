@@ -1,6 +1,7 @@
 package sinnott.concesionaria.stock.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
     List<Inventory> search(@Param("carId") Integer carId,
                            @Param("branchId") Integer branchId, 
                            @Param("stock") Integer stock);
+
+    Optional<Inventory> findByCarIdAndBranchId(Integer carId, Integer branchId);
 } 

@@ -14,58 +14,93 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BranchService {
+public class BranchService implements IBranchService {
     private final BranchRepository branchRepository;
 
     public BranchService(BranchRepository branchRepository) {
         this.branchRepository = branchRepository;
     }
 
+    @Override
     public List<BranchDTO> getBranches() {
-        return branchRepository.findAll()
-                               .stream()
-                               .map(BranchMapper::toDTO)
-                               .collect(Collectors.toList());
-    }
-
-    public BranchDTO getBranchById(Integer id) {
-        return BranchMapper.toDTO(branchRepository.findById(id)
-            .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada")));
-    }
-
-    public BranchDTO saveBranch(BranchDTO branchDTO) {
-        return BranchMapper.toDTO(branchRepository.save(BranchMapper.toEntity(branchDTO)));
-    }
-
-    public BranchDTO updateBranch(Integer id, BranchDTO branchDTO) {
-        Branch branch = branchRepository.findById(id)
-            .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada"));
-        branch.setName(branchDTO.getName());
-        branch.setCountry(branchDTO.getCountry());
-        branch.setProvince(branchDTO.getProvince());
-        branch.setCity(branchDTO.getCity());
-        branch.setAddress(branchDTO.getAddress());
-        branch.setOpeningDate(branchDTO.getOpeningDate());
-        branch.setDeliveryTimeFromCentralWarehouse(branchDTO.getDeliveryTimeFromCentralWarehouse());
-        branch.setDeliveryTimeFromBranch(branchDTO.getDeliveryTimeFromBranch());
-        return BranchMapper.toDTO(branchRepository.save(branch));
-    }
-
-    public void deleteBranch(Integer id) {
-        if (!branchRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada");
+        try {
+            return branchRepository.findAll()
+                .stream()
+                .map(BranchMapper::toDTO)
+                .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener sucursales", ex);
         }
-        branchRepository.deleteById(id);
     }
 
+    @Override
+    public BranchDTO getBranchById(Integer id) {
+        try {
+            return BranchMapper.toDTO(branchRepository.findById(id)
+                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada")));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener sucursal", ex);
+        }
+    }
+
+    @Override
+    public BranchDTO saveBranch(BranchDTO branchDTO) {
+        try {
+            return BranchMapper.toDTO(branchRepository.save(BranchMapper.toEntity(branchDTO)));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar sucursal", ex);
+        }
+    }
+
+    @Override
+    public BranchDTO updateBranch(Integer id, BranchDTO branchDTO) {
+        try {
+            Branch branch = branchRepository.findById(id)
+                .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada"));
+            branch.setName(branchDTO.getName());
+            branch.setCountry(branchDTO.getCountry());
+            branch.setProvince(branchDTO.getProvince());
+            branch.setCity(branchDTO.getCity());
+            branch.setAddress(branchDTO.getAddress());
+            branch.setOpeningDate(branchDTO.getOpeningDate());
+            branch.setDeliveryTimeFromCentralWarehouse(branchDTO.getDeliveryTimeFromCentralWarehouse());
+            branch.setDeliveryTimeFromBranch(branchDTO.getDeliveryTimeFromBranch());
+            return BranchMapper.toDTO(branchRepository.save(branch));
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar sucursal", ex);
+        }
+    }
+
+    @Override
+    public void deleteBranch(Integer id) {
+        try {
+            if (!branchRepository.existsById(id)) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sucursal no encontrada");
+            }
+            branchRepository.deleteById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al eliminar sucursal", ex);
+        }
+    }
+
+    @Override
     public List<BranchDTO> search(String name, Country country, String province, String city, String address) {
-        return branchRepository.search(name, country, province, city, address)
-                               .stream()
-                               .map(BranchMapper::toDTO)
-                               .collect(Collectors.toList());
+        try {
+            return branchRepository.search(name, country, province, city, address)
+                .stream()
+                .map(BranchMapper::toDTO)
+                .collect(Collectors.toList());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al buscar sucursales", ex);
+        }
     }
 
+    @Override
     public boolean existsBranch(Integer id) {
-        return branchRepository.existsById(id);
+        try {
+            return branchRepository.existsById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al verificar existencia de sucursal", ex);
+        }
     }
 } 

@@ -1,4 +1,4 @@
-package sinnott.concesionaria.sales.entities.repair;
+package sinnott.concesionaria.sales.entities;
 
 import java.time.LocalDate;
 
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RepairSummaryDTO {
-    private Integer repairID;
-    private Integer saleID;
+public class BillingDTO {
+    private Integer id;
     private String client;
     private String employee;
+    private String branch;
     private String car;
-    private Double vehicleKm;
-    private LocalDate repairDate;
-    private boolean hasWarranty;
+    private Double amount;
+    private LocalDate saleDate;
+    private LocalDate deliveryDate;
 }

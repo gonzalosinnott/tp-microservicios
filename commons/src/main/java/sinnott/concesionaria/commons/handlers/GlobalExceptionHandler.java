@@ -14,6 +14,7 @@ import sinnott.concesionaria.commons.models.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+import feign.FeignException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -111,6 +112,19 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<ErrorResponse> handleFeignException(
+            FeignException ex,
+            HttpServletRequest request) {
+        ErrorResponse errorResponse = ErrorResponse.of(
+            HttpStatus.BAD_GATEWAY.value(),
+            "Feign Client Error",
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
