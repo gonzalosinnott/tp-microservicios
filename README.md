@@ -10,6 +10,8 @@ Inicializar los proyectos en el siguiente orden:
   * 2- **gateway**
   * 3-  **Micro-servicios de dominio** `(branchs, clients, employees, stock, sales)`
 
+  * Al levantar las APIs se crean en memoria las bases y se populan automaticamente a partir de los .sql que se encuentran en la carpeta `resources` de cada API.  
+
   Luego se puede testear la aplicacion de dos formas:
 
    * Ingresar a http://localhost:8080/swagger-ui.html
